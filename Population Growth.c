@@ -1,8 +1,8 @@
 /*
 Author: <Mark Daoud>
 Date: <11/29/23>
-Purpose: <The purpose of this program is to calculate the population growth of the green crud population based on the initial amount there is 
-and the number of days that the population is growing entered by the user based oon the fact that after the initial 5 days every 5 days after 
+Purpose: <The purpose of this program is to calculate the population growth of the  population based on the initial size of it
+, the time it takes to double, and the number of days that the population is growing entered by the user based on the fact that after the initial X days every X days after 
 that the population is equal to the previous two population numbers added up>
 Time Spent: <45 minutes>
 */
@@ -17,25 +17,26 @@ Time Spent: <45 minutes>
 void clear_keyboard_buffer(void);
 
 //Pre Condition: None
-//Post Condition: User has entered the values for pounds and days and those values have been stored in the adresses of pounds and days
-void Get_input(int* ppounds, int* pdays);
+//Post Condition: User has entered the values for size, growth and days and those values have been stored in the adresses of size, growth, and days
+void Get_input(int* psize, int* pgrowth, int* pdays); 
 
-//Pre Condition: User has entered the values for pounds and days and those values have been stored in the addresses of pounds and days
-//Post Condition: The value for tpounds has been calculated and stored in the address of tpounds
-void Calculate_tpounds(int* ppounds, int* pdays, int* ptpounds); 
+//Pre Condition: User has entered the values for size, growth, and days and those values have been stored in the addresses of size, and days
+//Post Condition: The value for ptsize has been calculated and stored in the address of tsize
+void Calculate_tsize(int* psize, int* pgrowth, int* pdays, int* ptsize); 
 
 int main(int argc, char* argv[])
 {
-	int pounds; 
+	int size; 
 	int days;
-	int tpounds;
+	int tsize;
+	int growth;
 	char answer;
 	do
 	{
-		Get_input(&pounds, &days);
-		Calculate_tpounds(&pounds, &days, &tpounds);
-		printf("With an initial population of %d pounds of crud growing for %d days,\n", pounds,days);
-		printf("the final population would be %d pounds\n", tpounds);
+		Get_input(&size, &growth, &days); 
+		Calculate_tsize(&size, &growth, &days, &tsize); 
+		printf("With an initial population of %d with a growth rate of every %d days growing for %d days,\n", size, growth, days);
+		printf("the final population would be %d \n", tsize);
 		do {
 			printf("Would you like to continue? (y/n): "); 
 			scanf("%c", &answer);   
@@ -66,22 +67,32 @@ void clear_keyboard_buffer(void)
 
 }
 
-void Get_input(int* ppounds, int* pdays)
+void Get_input(int* psize, int* pgrowth, int* pdays)
 {
 	int noc = 0;
 	do
 	{
-		printf("Please enter the initial size of the green curd: ");
-		noc= scanf("%d", ppounds);
+		printf("Please enter the initial size of the population: ");
+		noc= scanf("%d", psize);
 		clear_keyboard_buffer();
-		if (noc != 1 || *ppounds < 0 )
+		if (noc != 1 || *psize < 0 )
 		{
 			printf("I'm sorry that value is negative or unrecognized\n"); 
 		}
-	} while (noc != 1 || *ppounds < 0);
+	} while (noc != 1 || *psize < 0); 
 	do
 	{
-		printf("Please enter the number of days: ");
+		printf("Please enter the amount of time in days it takes for the population to grow: ");
+		noc = scanf("%d", pgrowth);  
+		clear_keyboard_buffer();
+		if (noc != 1 || *pgrowth < 0) 
+		{
+			printf("I'm sorry that value is negative or unrecognized\n");
+		}
+	} while (noc != 1 || *pgrowth < 0);
+	do
+	{
+		printf("Please enter the number of days the population will grow: ");
 		noc = scanf("%d", pdays);
 		clear_keyboard_buffer(); 
 		if (noc != 1 || *pdays < 0) 
@@ -91,7 +102,7 @@ void Get_input(int* ppounds, int* pdays)
 	} while (noc != 1 || *pdays < 0); 
 
 }
-void Calculate_tpounds(int* ppounds, int* pdays, int* ptpounds)
+void Calculate_tsize(int* psize, int* pgrowth, int* pdays, int* ptsize) 
 {
 	int i;
 	int current;
@@ -99,21 +110,21 @@ void Calculate_tpounds(int* ppounds, int* pdays, int* ptpounds)
 	int temp;
 	if (*pdays == 0)
 	{
-		*ptpounds = *ppounds;
+		*ptsize = *psize;
 	}
 	else
 	{
-		current = *ppounds;
+		current = *psize;
 		previous = 0;
 		for (i = 1; i <= *pdays; ++i)
 		{
-			if (i % 5 == 0)    
+			if (i % *pgrowth == 0)     
 			{
 				temp = current; 
 				current += previous; 
 				previous = temp; 
 			}
 		}
-		*ptpounds = current;  
+		*ptsize = current;  
 	}
 }
